@@ -1,15 +1,14 @@
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 #if UNITY_EDITOR
 [CustomPropertyDrawer(typeof(SceneRefAttribute))]
 public class SceneRefDrawer : PropertyDrawer
 {
-    private static List<string> SceneList = new List<string>
-        {
-            "NONE"
-        };
+    private static List<string> SceneList = new List<string> { string.Empty, };
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
@@ -17,7 +16,7 @@ public class SceneRefDrawer : PropertyDrawer
             LoadSceneList();
 
         if (SceneList.Count == 0)
-            SceneList.Add("NONE");
+            SceneList.Add(string.Empty);
 
         var index = SceneList.IndexOf(property.stringValue);
 
@@ -30,15 +29,12 @@ public class SceneRefDrawer : PropertyDrawer
 
     private void LoadSceneList()
     {
-        SceneList = new List<string>
-        {
-            "NONE"
-        };
+        SceneList = new List<string> { string.Empty };
 
         foreach (var scene in EditorBuildSettings.scenes)
         {
-            var scenePathElements = scene.path.Split('/');
-            string sceneName = scenePathElements[scenePathElements.Length - 1];
+            var scenePath = scene.path.Split('/');
+            string sceneName = scenePath[scenePath.Length - 1];
             sceneName = sceneName.Remove(sceneName.Length - 6, 6);
 
             SceneList.Add(sceneName);

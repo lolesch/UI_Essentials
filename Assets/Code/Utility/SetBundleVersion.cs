@@ -4,13 +4,15 @@ using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace BuildPipeline
 {
-    [RequireComponent(typeof(TextMeshProUGUI))]
+    [RequireComponent(typeof(TextMeshProUGUI), typeof(ContentSizeFitter))]
     public class SetBundleVersion : MonoBehaviour, IPreprocessBuildWithReport
     {
         private TextMeshProUGUI versionText;
+        private ContentSizeFitter fitter;
 
         [ContextMenu("Validate")]
         void OnValidate()
@@ -18,11 +20,18 @@ namespace BuildPipeline
             if (!versionText)
                 versionText = GetComponent<TextMeshProUGUI>();
 
+            if (!fitter)
+                fitter = GetComponent<ContentSizeFitter>();
+
             IncrementVersionNumberNumber();
+
             versionText.text = $"Version: {PlayerSettings.bundleVersion}"; // Constants.VersionString}";
+
+            fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
         }
 
-        public int callbackOrder { get { return 0; } }
+        public int callbackOrder => 0;
 
         public void OnPreprocessBuild(BuildReport report)
         {
@@ -46,10 +55,14 @@ namespace BuildPipeline
             string patchVersion = string.Empty;
             string releaseType = string.Empty;
 
-            if (parts.Length > 0) majorVersion = int.Parse(parts[0]);
-            if (parts.Length > 1) minorVersion = int.Parse(parts[1]);
-            if (parts.Length > 2) patchVersion = parts[2];
-            if (parts.Length > 3) releaseType = parts[3];
+            if (parts.Length > 0)
+                majorVersion = int.Parse(parts[0]);
+            if (parts.Length > 1)
+                minorVersion = int.Parse(parts[1]);
+            if (parts.Length > 2)
+                patchVersion = parts[2];
+            if (parts.Length > 3)
+                releaseType = parts[3];
 
             if (patch)
                 patchVersion = System.DateTime.UtcNow.ToString("yyMMddHHmm");
