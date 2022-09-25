@@ -1,8 +1,7 @@
-﻿using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-namespace UI.Base
+namespace UI.Components.Buttons
 {
     /// <summary>
     /// Inherit from this class to add click functionality via scripts by overwriting the abstract 'OnClick' function.
@@ -10,7 +9,7 @@ namespace UI.Base
 
     public abstract class AbstractButton : TooltipRequester, IPointerClickHandler
     {
-        [HideInInspector] private UnityEvent onClick = new UnityEvent();
+        private readonly UnityEvent onClick = new UnityEvent();
 
         protected override void Awake()
         {

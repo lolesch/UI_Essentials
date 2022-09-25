@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace UI.Base
+namespace UI.Components.Toggle
 {
     public class RadioGroup : MonoBehaviour
     {
@@ -21,10 +21,10 @@ namespace UI.Base
 
             ActivatedToggle = activatedToggle;
 
-            ActivatedToggle.Toggle(true);
+            ActivatedToggle.SetToggle(true);
 
             foreach (var i in RadioToggle.Where(x => x.IsOn).Where(x => x != ActivatedToggle))
-                i.Toggle(false);
+                i.SetToggle(false);
 
             OnGroupChanged?.Invoke();
         }

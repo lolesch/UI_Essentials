@@ -2,28 +2,34 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace UI.Base
+namespace UI.Components.Toggle
 {
     public abstract class AbstractToggle : TooltipRequester, IPointerClickHandler
     {
-        [SerializeField] protected bool isEnabledAtStrat = false;
+        [SerializeField] protected bool isEnabledOnAwake = false;
+        [SerializeField] protected bool isEnabledOnEnable = false;
+        [SerializeField, ReadOnly] protected RadioGroup radioGroup = null;
+
         public bool IsOn { get; private set; } = false;
-
-        public RadioGroup radioGroup = null;
-
         public RadioGroup RadioGroup => radioGroup != null ? radioGroup : radioGroup = GetComponentInParent<RadioGroup>();
 
         protected override void Awake()
         {
             base.Awake();
 
-            if (RadioGroup == null)
-                Debug.LogWarning(new MissingComponentException($"Missing RadioGroup on {name} under {transform.parent.name}"));
-
-            SetToggle(isEnabledAtStrat);
+            SetToggle(isEnabledOnAwake);
         }
 
-        protected virtual void SetToggle(bool isOn)
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            SetToggle(isEnabledOnEnable);
+        }
+
+        //public void Toggle() => SetToggle(!IsOn);
+
+        public virtual void SetToggle(bool isOn)
         {
             IsOn = isOn;
 
@@ -32,11 +38,19 @@ namespace UI.Base
 
             DoStateTransition(IsOn ? SelectionState.Selected : SelectionState.Normal, true);
 
-            NotifyGroup(IsOn);
-        }
+            PlayToggleSound(isOn);
 
-        public void Toggle() => SetToggle(!IsOn);
-        public void Toggle(bool isOn) => SetToggle(isOn);
+            NotifyGroup(IsOn);
+
+            void NotifyGroup(bool isOn)
+            {
+                if (!RadioGroup)
+                    return;
+
+                if (isOn)
+                    RadioGroup.SetOtherTogglesOff(this);
+            }
+        }
 
         public virtual void OnPointerClick(PointerEventData eventData)
         {
@@ -46,20 +60,10 @@ namespace UI.Base
             if (eventData.button != PointerEventData.InputButton.Left)
                 return;
 
-            if (RadioGroup && !RadioGroup.AllowSwitchOff)
-                if (IsOn)
-                    return;
-
-            SetToggle(!IsOn);
-        }
-
-        void NotifyGroup(bool isOn)
-        {
-            if (!RadioGroup)
+            if (RadioGroup && !RadioGroup.AllowSwitchOff && IsOn)
                 return;
 
-            if (isOn)
-                RadioGroup.SetOtherTogglesOff(this);
+            SetToggle(!IsOn);
         }
 
         public override void OnPointerExit(PointerEventData eventData)
@@ -82,13 +86,12 @@ namespace UI.Base
         {
             base.OnPointerDown(eventData);
 
-            if (interactable)
-                if (!IsOn)
-                    PlayClickSound();
-            //AudioProvider.Instance.PlayToggle();
+            if (interactable && !IsOn)
+                PlayClickSound();
         }
 
         public virtual void PlayHoverSound() { } // => AudioProvider.Instance.PlayButtonHover();
         public virtual void PlayClickSound() { } // => AudioProvider.Instance.PlayButtonClick();
+        public virtual void PlayToggleSound(bool isOn) { } // => AudioProvider.Instance.PlayButtonClick();
     }
 }

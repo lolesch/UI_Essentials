@@ -6,12 +6,13 @@ namespace UI.Components
     [RequireComponent(typeof(Canvas), typeof(CanvasScaler))]
     public class RootCanvas : MonoBehaviour
     {
-        [SerializeField] private bool isPersistant = false;
+        [SerializeField] protected bool isPersistant = false;
+        [SerializeField] protected ScreenOrientation orientation = ScreenOrientation.AutoRotation;
+        [SerializeField, ReadOnly] protected Canvas canvas;
+        [SerializeField, ReadOnly] protected CanvasScaler scaler;
 
-        [SerializeField] private Canvas canvas;
         public Canvas Canvas => canvas != null ? canvas : canvas = GetComponent<Canvas>();
 
-        [SerializeField] private CanvasScaler scaler;
         public CanvasScaler Scaler => scaler != null ? scaler : scaler = GetComponent<CanvasScaler>();
 
         private void OnEnable()
