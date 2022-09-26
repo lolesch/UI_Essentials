@@ -1,12 +1,12 @@
-﻿using Extensions;
+﻿using UI.Extensions;
 using UnityEngine;
 
-namespace UI.Base
+namespace UI.Components
 {
     [RequireComponent(typeof(RectTransform))]
     public class RefreshLayoutOnEnable : MonoBehaviour
     {
-        private void Start() => (transform as RectTransform).RefreshContentFitter();
+        //private void Start() => (transform as RectTransform).RefreshContentFitter();
 
         private void OnEnable() => (transform as RectTransform).RefreshContentFitter();
     }

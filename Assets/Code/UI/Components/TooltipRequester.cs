@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using UI.Extensions;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace UI.Components
 {
-    [RequireComponent(typeof(GraphicRaycaster))]
+    [RequireComponent(typeof(RectTransform), typeof(GraphicRaycaster))]
     public class TooltipRequester : Selectable
     {
         // TODO: read tooltip from LOCA
@@ -22,7 +23,7 @@ namespace UI.Components
             if (targetGraphic)
                 targetGraphic.raycastTarget = true;
 
-            Debug.LogWarning($"{name} in {transform.parent.name} has the following tooltip:\n{tooltip}", this);
+            Debug.Log($"{"Tooltip:".Colored(UIExtensions.Orange)}\t{name}\t{(tooltip == "" ? "NONE" : tooltip).Colored(UIExtensions.Orange)}", this);
         }
 
         protected override void OnDisable()
@@ -60,7 +61,7 @@ namespace UI.Components
         {
             base.OnSelect(eventData);
 
-            Debug.Log($"current selected object: {eventData.selectedObject}");
+            Debug.Log($"{"Selection:".Colored(UIExtensions.Orange)}\t{eventData.selectedObject}", this);
         }
     }
 }

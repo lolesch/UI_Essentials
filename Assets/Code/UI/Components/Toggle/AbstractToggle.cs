@@ -1,30 +1,62 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace UI.Components.Toggle
 {
+    [RequireComponent(typeof(Canvas))]
     public abstract class AbstractToggle : TooltipRequester, IPointerClickHandler
     {
-        [SerializeField] protected bool isEnabledOnAwake = false;
-        [SerializeField] protected bool isEnabledOnEnable = false;
-        [SerializeField, ReadOnly] protected RadioGroup radioGroup = null;
+        [Header("ToggleSettings")]
 
-        public bool IsOn { get; private set; } = false;
+        // test wich one to use or if both are necessary
+        [SerializeField] protected bool isToggledOnAwake = false;
+        [SerializeField] protected bool isToggledOnEnable = false;
+
+        [SerializeField] protected bool doScaleOnToggle = false;
+
+        [SerializeField] private Sprite toggledOffSprite;
+        [SerializeField] private Sprite toggledOnSprite;
+
+        [field: SerializeField, ReadOnly] public bool IsOn { get; private set; } = false;
+
+        [SerializeField, ReadOnly] protected RadioGroup radioGroup = null;
         public RadioGroup RadioGroup => radioGroup != null ? radioGroup : radioGroup = GetComponentInParent<RadioGroup>();
+
+        protected override void OnValidate()
+        {
+            base.OnValidate();
+
+            IsOn = isToggledOnAwake || isToggledOnEnable;
+
+            NotifyGroup(IsOn);
+
+            if (RadioGroup != null && RadioGroup.transform != transform.parent)
+                radioGroup = null;
+        }
 
         protected override void Awake()
         {
             base.Awake();
 
-            SetToggle(isEnabledOnAwake);
+            SetToggle(isToggledOnAwake);
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
 
-            SetToggle(isEnabledOnEnable);
+            if (!isToggledOnAwake)
+                SetToggle(isToggledOnEnable);
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+
+            if (DOTween.IsTweening(targetGraphic.transform))
+                DOTween.Kill(targetGraphic.transform);
         }
 
         //public void Toggle() => SetToggle(!IsOn);
@@ -33,23 +65,26 @@ namespace UI.Components.Toggle
         {
             IsOn = isOn;
 
-            // TODO catch DOTween errors
-            transform.DOScale(IsOn ? 1.12f : 1, .2f).SetEase(Ease.InOutSine);
+            if (toggledOffSprite != null && toggledOnSprite != null)
+                (targetGraphic as Image).sprite = isOn ? toggledOnSprite : toggledOffSprite;
+
+            if (doScaleOnToggle)
+                targetGraphic.transform.DOScale(IsOn ? 1.12f : 1, .2f).SetEase(Ease.InOutSine);
 
             DoStateTransition(IsOn ? SelectionState.Selected : SelectionState.Normal, true);
 
             PlayToggleSound(isOn);
 
             NotifyGroup(IsOn);
+        }
 
-            void NotifyGroup(bool isOn)
-            {
-                if (!RadioGroup)
-                    return;
+        protected void NotifyGroup(bool isOn)
+        {
+            if (!RadioGroup)
+                return;
 
-                if (isOn)
-                    RadioGroup.SetOtherTogglesOff(this);
-            }
+            if (isOn)
+                RadioGroup.SetOtherTogglesOff(this);
         }
 
         public virtual void OnPointerClick(PointerEventData eventData)

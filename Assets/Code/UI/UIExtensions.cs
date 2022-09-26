@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Extensions
+namespace UI.Extensions
 {
     public static class UIExtensions
     {
@@ -50,5 +50,6 @@ namespace Extensions
         /// </summary>
         public static string Colored(this string text, Color color) => $"<color=#{ColorUtility.ToHtmlStringRGBA(color)}>{text}</color>";
 
+        public static Color Orange => new Color(1f, .5f, 0f, 1f);
     }
 }

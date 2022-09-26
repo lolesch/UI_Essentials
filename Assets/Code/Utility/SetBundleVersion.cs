@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using TMPro;
+using UI.Extensions;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
@@ -86,10 +87,10 @@ namespace BuildPipeline
             if (releaseType != string.Empty)
                 versionText = $"{versionText}-{releaseType}";
 
-            Debug.LogWarning("Version number incremented to " + versionText);
-
             PlayerSettings.bundleVersion = versionText;
             //Constants.SetVersionString(versionText);
+
+            Debug.Log($"{"Version:".Colored(UIExtensions.Orange)}\tVersion incremented to " + versionText.Colored(UIExtensions.Orange));
 
             return versionText;
         }
