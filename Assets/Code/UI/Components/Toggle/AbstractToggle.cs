@@ -55,7 +55,7 @@ namespace UI.Components.Toggle
         {
             base.OnDisable();
 
-            if (DOTween.IsTweening(targetGraphic.transform))
+            if (targetGraphic && DOTween.IsTweening(targetGraphic.transform))
                 DOTween.Kill(targetGraphic.transform);
         }
 
@@ -68,7 +68,7 @@ namespace UI.Components.Toggle
             if (toggledOffSprite != null && toggledOnSprite != null)
                 (targetGraphic as Image).sprite = isOn ? toggledOnSprite : toggledOffSprite;
 
-            if (doScaleOnToggle)
+            if (targetGraphic && doScaleOnToggle)
                 targetGraphic.transform.DOScale(IsOn ? 1.12f : 1, .2f).SetEase(Ease.InOutSine);
 
             DoStateTransition(IsOn ? SelectionState.Selected : SelectionState.Normal, true);

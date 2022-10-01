@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace BuildPipeline
 {
-    [RequireComponent(typeof(TextMeshProUGUI), typeof(ContentSizeFitter))]
+    [RequireComponent(typeof(RectTransform), typeof(TextMeshProUGUI), typeof(ContentSizeFitter))]
     public class SetBundleVersion : MonoBehaviour, IPreprocessBuildWithReport
     {
         private TextMeshProUGUI versionText;

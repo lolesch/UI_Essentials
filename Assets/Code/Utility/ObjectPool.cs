@@ -3,17 +3,20 @@ using UnityEngine;
 
 namespace Creation
 {
-    public class PrefabObjectPool<T> : IObjectPool<T> where T : MonoBehaviour
+    public class ObjectPool<T> : IObjectPool<T> where T : MonoBehaviour
     {
-        public readonly List<T> pool = new List<T>();
+        private readonly List<T> pool = new List<T>(); // could be a Queue<T>
         private readonly T prefab;
         private readonly Transform parent;
+        private readonly bool isSizeRestricted = false;
 
-        public PrefabObjectPool(T prefab, Transform parent, int initialSize = 0)
+        public ObjectPool(T prefab, Transform parent, uint initialSize = 0, bool isSizeRestricted = false)
         {
-            this.pool = new List<T>(initialSize);
+            this.pool = new List<T>((int)initialSize);
             this.prefab = prefab;
             this.parent = parent;
+            this.isSizeRestricted = isSizeRestricted;
+
         }
 
         public List<T> Active
@@ -45,6 +48,9 @@ namespace Creation
 
         public T Next()
         {
+            if (isSizeRestricted && Inactive.Count == 0) // if no inactives left, recycle the TODO: OLDEST active
+                Active[0].gameObject.SetActive(false);
+
             foreach (T candidate in Inactive)
             {
                 candidate.gameObject.SetActive(true);

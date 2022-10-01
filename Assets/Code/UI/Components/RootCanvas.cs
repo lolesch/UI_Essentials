@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace UI.Components
 {
-    [RequireComponent(typeof(Canvas), typeof(CanvasScaler))]
+    [RequireComponent(typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler))]
     public class RootCanvas : MonoBehaviour
     {
         [SerializeField] protected bool isPersistant = false;

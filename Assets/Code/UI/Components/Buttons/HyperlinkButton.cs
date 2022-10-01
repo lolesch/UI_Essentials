@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace UI.Components.Buttons
 {
-    public class HyperlinkButton : AbstractButton, IPointerClickHandler
+    public class HyperlinkButton : AbstractButton
     {
         [SerializeField] private string linkToOpen;
 

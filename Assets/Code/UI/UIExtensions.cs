@@ -5,6 +5,8 @@ namespace UI.Extensions
 {
     public static class UIExtensions
     {
+        public static Color Orange => new Color(1f, .5f, 0f, 1f);
+
         /// <summary>
         /// Returns true if the passed position extends the screen's current resolution
         /// </summary>
@@ -49,7 +51,5 @@ namespace UI.Extensions
         /// An inline richtext color converter
         /// </summary>
         public static string Colored(this string text, Color color) => $"<color=#{ColorUtility.ToHtmlStringRGBA(color)}>{text}</color>";
-
-        public static Color Orange => new Color(1f, .5f, 0f, 1f);
     }
 }

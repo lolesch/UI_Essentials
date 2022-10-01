@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 namespace UI.Components
 {
-    [RequireComponent(typeof(RectTransform), typeof(GraphicRaycaster))]
+    [RequireComponent(typeof(RectTransform), typeof(CanvasRenderer))]
     public class TooltipRequester : Selectable
     {
-        // TODO: read tooltip from LOCA
-        [TextArea] public string tooltip = "";
+        // TODO: import and update tooltip from LOCA
+        [SerializeField, TextArea] private string tooltip = "";
 
         private static TooltipRequester currentTooltipRequester = null;
 
@@ -17,21 +17,18 @@ namespace UI.Components
         {
             base.OnEnable();
 
-            if (!targetGraphic)
+            if (targetGraphic == null)
                 targetGraphic = GetComponent<Graphic>();
 
             if (targetGraphic)
                 targetGraphic.raycastTarget = true;
 
-            Debug.Log($"{"Tooltip:".Colored(UIExtensions.Orange)}\t{name}\t{(tooltip == "" ? "NONE" : tooltip).Colored(UIExtensions.Orange)}", this);
+            //Debug.Log($"{"Tooltip:".Colored(UIExtensions.Orange)}\t{name}\t{(tooltip == "" ? "NONE" : tooltip).Colored(UIExtensions.Orange)}", this);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-
-            if (targetGraphic)
-                targetGraphic.raycastTarget = false;
 
             currentTooltipRequester = null;
 
@@ -42,8 +39,12 @@ namespace UI.Components
         {
             base.OnPointerEnter(eventData);
 
-            if (tooltip != string.Empty)
+            if (tooltip != "")
+            {
                 currentTooltipRequester = this;
+
+                //Debug.Log($"{"Tooltip:".Colored(UIExtensions.Orange)}\t{name}\t{(tooltip == "" ? "NONE" : tooltip).Colored(UIExtensions.Orange)}", this);
+            }
 
             // TooltipProvider.Instance.ShowTooltipData(tooltip);
         }
