@@ -8,6 +8,10 @@ namespace UI.Components.Buttons
         [Space]
         [SerializeField, SceneRef] private string sceneToLoad;
 
-        protected override void OnClick() => SceneManager.LoadSceneAsync(sceneToLoad);
+        protected override void OnClick()
+        {
+            if (sceneToLoad != "")
+                SceneManager.LoadSceneAsync(sceneToLoad);
+        }
     }
 }
