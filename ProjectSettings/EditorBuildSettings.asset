@@ -9,6 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: eca0cbbe6511d3a40a5f5dc01ddb0731
   - enabled: 1
-    path: Assets/Scenes/Bone&Blood.unity
-    guid: aebc6bee216be884faa4c148632656d1
+    path: Assets/Scenes/BnB_MainMenu.unity
+    guid: a90298a62b257014fb76ef4a889474df
   m_configObjects: {}

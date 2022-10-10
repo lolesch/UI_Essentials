@@ -5,6 +5,8 @@
     public static Selectable playerTwoSelectable
         set Selectables depending on the inputDevice ID
 
+- implement scale/hover behavior on buttons
+
 - implement a loca system
 
 - implement abstractMenu (or are these radioToggles)

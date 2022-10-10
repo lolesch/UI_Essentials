@@ -3,7 +3,7 @@ using UI.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.Displays
+namespace UI.Components.Displays
 {
     [RequireComponent(typeof(CanvasGroup), typeof(GraphicRaycaster))]
     public abstract class AbstractDisplay : MonoBehaviour

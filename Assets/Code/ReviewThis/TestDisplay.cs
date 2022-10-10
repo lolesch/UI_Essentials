@@ -1,4 +1,4 @@
-﻿namespace UI.Displays
+﻿namespace UI.Components.Displays
 {
     public class TestDisplay : AbstractDisplay { }
 }
