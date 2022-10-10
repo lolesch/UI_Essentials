@@ -5,36 +5,32 @@ using UnityEngine.UI;
 
 namespace UI.Displays
 {
-    [RequireComponent(typeof(CanvasGroup), typeof(Canvas), typeof(GraphicRaycaster))]
+    [RequireComponent(typeof(CanvasGroup), typeof(GraphicRaycaster))]
     public abstract class AbstractDisplay : MonoBehaviour
     {
-        [field: SerializeField, Range(0, 1)] public float FadeDuration { get; private set; } = .2f;
+        [SerializeField, Range(0, 1)] protected float fadeDuration = .2f;
+        [SerializeField] protected Vector2 scaleTo = Vector2.one;
+        [SerializeField] protected Vector2 moveTo = Vector2.zero;
 
-        protected CanvasGroup CanvasGroup { get; private set; } = null;
+        // TODO continue here (implement scale and move OnEnable and OnDisable
+        protected bool IsScaling => 0 < fadeDuration;
+        protected bool IsFading => Vector2.one != scaleTo;
+        protected bool IsMoving => Vector2.zero != moveTo;
 
-        protected Canvas RootCanvas { get; private set; } = null;
 
-        protected virtual void Awake()
-        {
-            CanvasGroup = GetComponent<CanvasGroup>();
+        [SerializeField, ReadOnly] protected CanvasGroup canvasGroup = null;
+        public CanvasGroup CanvasGroup => canvasGroup != null ? canvasGroup : canvasGroup = GetComponentInParent<CanvasGroup>();
 
-            if (CanvasGroup == null)
-                Debug.LogError(new MissingComponentException($"Missing CanvasGroup on {name} under {transform.parent.name}"));
-
-            RootCanvas = transform.root.GetComponent<Canvas>();
-
-            if (RootCanvas == null)
-                RootCanvas = transform.root.GetComponentInChildren<Canvas>();
-
-            if (RootCanvas == null)
-                Debug.LogError(new MissingComponentException($"Missing Canvas on {name} under {transform.parent.name}"));
-            else if (RootCanvas.renderMode == RenderMode.WorldSpace)
-                RootCanvas.worldCamera = Camera.main;
-
-            FadeOut(0);
-        }
+        protected virtual void Awake() => FadeOut(0);
 
         protected virtual void OnDestroy()
+        {
+            if (CanvasGroup != null)
+                if (DOTween.IsTweening(CanvasGroup))
+                    DOTween.Kill(CanvasGroup);
+        }
+
+        protected virtual void OnDisable()
         {
             if (CanvasGroup != null)
                 if (DOTween.IsTweening(CanvasGroup))
