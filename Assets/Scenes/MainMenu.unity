@@ -470,6 +470,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3757496550302238137, guid: 5fe59d94ebf98b240b3f38e9a157c70f, type: 3}
+      propertyPath: <IsOn>k__BackingField
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3757496550409098094, guid: 5fe59d94ebf98b240b3f38e9a157c70f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
