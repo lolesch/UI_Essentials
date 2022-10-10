@@ -16,7 +16,6 @@ namespace Creation
             this.prefab = prefab;
             this.parent = parent;
             this.isSizeRestricted = isSizeRestricted;
-
         }
 
         public List<T> Active
@@ -48,7 +47,7 @@ namespace Creation
 
         public T Next()
         {
-            if (isSizeRestricted && Inactive.Count == 0) // if no inactives left, recycle the TODO: OLDEST active
+            if (isSizeRestricted && Inactive.Count == 0) // TODO if no inactives left, recycle the TODO: OLDEST active
                 Active[0].gameObject.SetActive(false);
 
             foreach (T candidate in Inactive)

@@ -9,37 +9,22 @@ using UnityEngine.UI;
 
 namespace BuildPipeline
 {
-    [RequireComponent(typeof(RectTransform), typeof(TextMeshProUGUI), typeof(ContentSizeFitter))]
+    [RequireComponent(typeof(TextMeshProUGUI), typeof(ContentSizeFitter))]
     public class SetBundleVersion : MonoBehaviour, IPreprocessBuildWithReport
     {
-        private TextMeshProUGUI versionText;
-        private ContentSizeFitter fitter;
-
-        [ContextMenu("Validate")]
-        void OnValidate()
-        {
-            if (!versionText)
-                versionText = GetComponent<TextMeshProUGUI>();
-
-            if (!fitter)
-                fitter = GetComponent<ContentSizeFitter>();
-
-            IncrementVersionNumberNumber();
-
-            versionText.text = $"Version: {PlayerSettings.bundleVersion}"; // Constants.VersionString}";
-
-            fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-        }
-
         public int callbackOrder => 0;
+
+        private TextMeshProUGUI versionText;
+
+        [ContextMenu("UpdateText")]
+        public void UpdateText() => OnPreprocessBuild(null);
+
+        void OnValidate() => versionText = GetComponent<TextMeshProUGUI>();
 
         public void OnPreprocessBuild(BuildReport report)
         {
-            IncreasePatchNumber();
-
             if (versionText)
-                versionText.text = $"Version: {PlayerSettings.bundleVersion}";
+                versionText.text = $"Version: {IncreasePatchNumber()}";
         }
 
         private static string IncrementVersionNumberNumber(bool major = false, bool minor = false, bool patch = true)
@@ -96,13 +81,13 @@ namespace BuildPipeline
         }
 
         [MenuItem("Build/Increase Patch Number", false, 800)]
-        private static void IncreasePatchNumber() => IncrementVersionNumberNumber(false, false, true);
+        private static string IncreasePatchNumber() => IncrementVersionNumberNumber(false, false, true);
 
         [MenuItem("Build/Increase Minor Version Number", false, 801)]
-        private static void IncreaseMinorNumber() => IncrementVersionNumberNumber(false, true, false);
+        private static string IncreaseMinorNumber() => IncrementVersionNumberNumber(false, true, false);
 
         [MenuItem("Build/Increase Major Version Number", false, 802)]
-        private static void IncreaseMajorNumber() => IncrementVersionNumberNumber(true, false, false);
+        private static string IncreaseMajorNumber() => IncrementVersionNumberNumber(true, false, false);
     }
 }
 #endif
