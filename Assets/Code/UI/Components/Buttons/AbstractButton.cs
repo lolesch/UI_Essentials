@@ -1,13 +1,11 @@
-﻿using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace UI.Components.Buttons
 {
-    [RequireComponent(typeof(Canvas))]
     public abstract class AbstractButton : TooltipRequester, IPointerClickHandler
     {
-        private readonly UnityEvent onClick = new UnityEvent();
+        private readonly UnityEvent onClick = new();
 
         protected override void Awake()
         {

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UI.Extensions;
+using UnityEngine;
 
 namespace UI.Components.Buttons
 {
@@ -6,6 +7,12 @@ namespace UI.Components.Buttons
     {
         [SerializeField] private string linkToOpen;
 
-        protected override void OnClick() => Application.OpenURL(linkToOpen);
+        protected override void OnClick()
+        {
+            if (Application.isPlaying)
+                Application.OpenURL(linkToOpen);
+
+            Debug.Log($"OPEN URL:\t{linkToOpen.Colored(UIExtensions.LightBlue)}");
+        }
     }
 }

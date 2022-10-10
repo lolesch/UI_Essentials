@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace UI.Components
 {
-    [RequireComponent(typeof(RectTransform), typeof(CanvasRenderer))]
+    [RequireComponent(typeof(GraphicRaycaster), typeof(CanvasRenderer))]
     public class TooltipRequester : Selectable
     {
         // TODO: import and update tooltip from LOCA
@@ -22,8 +22,8 @@ namespace UI.Components
 
             if (targetGraphic)
                 targetGraphic.raycastTarget = true;
-
-            //Debug.Log($"{"Tooltip:".Colored(UIExtensions.Orange)}\t{name}\t{(tooltip == "" ? "NONE" : tooltip).Colored(UIExtensions.Orange)}", this);
+            else
+                UIExtensions.MissingComponent(nameof(Graphic), gameObject);
         }
 
         protected override void OnDisable()
@@ -43,7 +43,7 @@ namespace UI.Components
             {
                 currentTooltipRequester = this;
 
-                //Debug.Log($"{"Tooltip:".Colored(UIExtensions.Orange)}\t{name}\t{(tooltip == "" ? "NONE" : tooltip).Colored(UIExtensions.Orange)}", this);
+                // Debug.Log($"{"Tooltip:".Colored(UIExtensions.Orange)}\t{name}\t{(tooltip == "" ? "NONE" : tooltip).Colored(UIExtensions.Orange)}", this);
             }
 
             // TooltipProvider.Instance.ShowTooltipData(tooltip);
@@ -62,7 +62,7 @@ namespace UI.Components
         {
             base.OnSelect(eventData);
 
-            Debug.Log($"{"Selection:".Colored(UIExtensions.Orange)}\t{eventData.selectedObject}", this);
+            UIExtensions.Select(eventData.selectedObject);
         }
     }
 }

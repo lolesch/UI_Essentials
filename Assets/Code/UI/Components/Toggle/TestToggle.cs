@@ -9,7 +9,7 @@ namespace UI.Components.Toggle
         {
             base.SetToggle(isOn);
 
-            Debug.Log($"{"Toggle:".Colored(UIExtensions.Orange)}\t{nameof(TestToggle)} was toggled {(isOn ? "on" : "off").Colored(UIExtensions.Orange)}", this);
+            Debug.Log($"TOGGLE:\t{name.ColoredComponent()} was toggled {(isOn ? "on" : "off").Colored(UIExtensions.Orange)}", this);
         }
     }
 }

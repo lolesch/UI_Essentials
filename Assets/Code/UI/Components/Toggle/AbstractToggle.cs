@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 namespace UI.Components.Toggle
 {
-    [RequireComponent(typeof(Canvas))]
     public abstract class AbstractToggle : TooltipRequester, IPointerClickHandler
     {
         [Header("ToggleSettings")]
@@ -40,7 +39,8 @@ namespace UI.Components.Toggle
         {
             base.Awake();
 
-            SetToggle(isToggledOnAwake);
+            if (isToggledOnAwake)
+                SetToggle(isToggledOnAwake);
         }
 
         protected override void OnEnable()
