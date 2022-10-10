@@ -13,7 +13,7 @@ namespace UI.Components.Toggle
 
         public event Action OnGroupChanged;
 
-        private readonly List<AbstractToggle> toggleList = new();
+        private readonly List<AbstractToggle> toggleList = new List<AbstractToggle>();
 
         private void OnValidate()
         {

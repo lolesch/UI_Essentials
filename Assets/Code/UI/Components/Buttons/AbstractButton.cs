@@ -5,7 +5,7 @@ namespace UI.Components.Buttons
 {
     public abstract class AbstractButton : TooltipRequester, IPointerClickHandler
     {
-        private readonly UnityEvent onClick = new();
+        private readonly UnityEvent onClick = new UnityEvent();
 
         protected override void Awake()
         {

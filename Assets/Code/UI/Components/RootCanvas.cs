@@ -11,7 +11,7 @@ namespace UI.Components
         [Space]
         [SerializeField] protected bool isPersistant = false;
         [SerializeField] protected ScreenOrientation orientation = ScreenOrientation.AutoRotation;
-        [SerializeField] protected Vector2 referenceResolution = new(1920, 1080);
+        [SerializeField] protected Vector2 referenceResolution = new Vector2(1920, 1080);
 
         public Canvas Canvas => canvas != null ? canvas : canvas = GetComponent<Canvas>();
 
