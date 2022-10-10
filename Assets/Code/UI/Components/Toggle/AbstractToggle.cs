@@ -14,6 +14,7 @@ namespace UI.Components.Toggle
         [SerializeField] protected bool isToggledOnEnable = false;
 
         [SerializeField] protected bool doScaleOnToggle = false;
+        [SerializeField] protected bool doScaleOnHover = false;
 
         [SerializeField] private Sprite toggledOffSprite;
         [SerializeField] private Sprite toggledOnSprite;
@@ -49,6 +50,9 @@ namespace UI.Components.Toggle
 
             if (!isToggledOnAwake)
                 SetToggle(isToggledOnEnable);
+
+            if (radioGroup && interactable)
+                radioGroup.Register(this);
         }
 
         protected override void OnDisable()
@@ -57,6 +61,9 @@ namespace UI.Components.Toggle
 
             if (targetGraphic && DOTween.IsTweening(targetGraphic.transform))
                 DOTween.Kill(targetGraphic.transform);
+
+            if (radioGroup)
+                radioGroup.Unregister(this);
         }
 
         //public void Toggle() => SetToggle(!IsOn);
@@ -66,14 +73,14 @@ namespace UI.Components.Toggle
             IsOn = isOn;
 
             if (toggledOffSprite != null && toggledOnSprite != null)
-                (targetGraphic as Image).sprite = isOn ? toggledOnSprite : toggledOffSprite;
+                (targetGraphic as Image).sprite = IsOn ? toggledOnSprite : toggledOffSprite;
 
             if (targetGraphic && doScaleOnToggle)
-                targetGraphic.transform.DOScale(IsOn ? 1.12f : 1, .2f).SetEase(Ease.InOutSine);
+                Scale(IsOn, 1.12f);
 
             DoStateTransition(IsOn ? SelectionState.Selected : SelectionState.Normal, true);
 
-            PlayToggleSound(isOn);
+            PlayToggleSound(IsOn);
 
             NotifyGroup(IsOn);
         }
@@ -107,6 +114,14 @@ namespace UI.Components.Toggle
 
             if (interactable)
                 DoStateTransition(IsOn ? SelectionState.Selected : SelectionState.Normal, false);
+
+            if (targetGraphic)
+            {
+                if (doScaleOnToggle)
+                    Scale(IsOn, 1.12f);
+                else if (doScaleOnHover && !IsOn)
+                    Scale(false, 1.06f);
+            }
         }
 
         public override void OnPointerEnter(PointerEventData eventData)
@@ -115,6 +130,9 @@ namespace UI.Components.Toggle
 
             if (interactable)
                 PlayHoverSound();
+
+            if (targetGraphic && doScaleOnHover && !IsOn)
+                Scale(true, 1.06f);
         }
 
         public override void OnPointerDown(PointerEventData eventData)
@@ -124,6 +142,8 @@ namespace UI.Components.Toggle
             if (interactable && !IsOn)
                 PlayClickSound();
         }
+
+        private void Scale(bool condition, float factor) => targetGraphic.transform.DOScale(condition ? factor : 1, .15f).SetEase(Ease.InOutSine);
 
         public virtual void PlayHoverSound() { } // => AudioProvider.Instance.PlayButtonHover();
         public virtual void PlayClickSound() { } // => AudioProvider.Instance.PlayButtonClick();
